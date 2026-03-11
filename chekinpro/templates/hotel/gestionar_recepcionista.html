@@ -36,16 +36,7 @@
             </div>
         </div>
 
-        <!-- Mensajes -->
-        {% if messages %}
-            {% for message in messages %}
-            <div class="custom-alert alert-{{ message.tags }}">
-                <i class="bi bi-{% if message.tags == 'success' %}check-circle-fill{% elif message.tags == 'error' %}exclamation-circle-fill{% else %}info-circle-fill{% endif %}"></i>
-                {{ message }}
-                <button type="button" class="alert-close" onclick="this.parentElement.remove()">×</button>
-            </div>
-            {% endfor %}
-        {% endif %}
+        <!-- BLOQUE ELIMINADO: Ya no hay mensajes feos de Django -->
 
         <div class="row g-4">
             <!-- Columna izquierda - Recepcionista Actual -->
@@ -83,7 +74,8 @@
                                     </div>
                                 </div>
 
-                                <form method="POST" onsubmit="return confirm('¿Estás seguro de quitar a {{ recepcionista_actual.username }}?')">
+                                <!-- Formulario con SweetAlert -->
+                                <form method="POST" id="form-quitar-recepcionista" onsubmit="event.preventDefault(); confirmarQuitarRecepcionista('{{ recepcionista_actual.username }}')">
                                     {% csrf_token %}
                                     <input type="hidden" name="accion" value="quitar">
                                     <button type="submit" class="btn-quitar">
@@ -115,7 +107,7 @@
                     </div>
                     <div class="card-body">
                         {% if recepcionistas_disponibles %}
-                        <form method="POST" class="asignar-form">
+                        <form method="POST" class="asignar-form" id="form-asignar-recepcionista" onsubmit="event.preventDefault(); confirmarAsignacionRecepcionista()">
                             {% csrf_token %}
                             <input type="hidden" name="accion" value="asignar">
                             
@@ -124,7 +116,7 @@
                                     <i class="bi bi-person-badge"></i>
                                     Seleccionar Recepcionista
                                 </label>
-                                <select name="email" class="form-select" required>
+                                <select name="email" id="select-recepcionista" class="form-select" required>
                                     <option value="">-- Elige un recepcionista --</option>
                                     {% for r in recepcionistas_disponibles %}
                                     <option value="{{ r.email }}">{{ r.username }} - {{ r.email }}</option>
@@ -168,6 +160,83 @@
         </div>
     </div>
 </div>
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+// Función para confirmar quitar recepcionista
+function confirmarQuitarRecepcionista(username) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: `¿Quieres quitar a ${username} como recepcionista?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Sí, quitar',
+        cancelButtonText: 'Cancelar',
+        background: '#fff',
+        backdrop: `rgba(0,0,0,0.6)`
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('form-quitar-recepcionista').submit();
+        }
+    });
+}
+
+// Función para confirmar asignación
+function confirmarAsignacionRecepcionista() {
+    const select = document.getElementById('select-recepcionista');
+    const email = select.value;
+    const textoSeleccionado = select.options[select.selectedIndex]?.text || '';
+    
+    if (!email) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Debes seleccionar un recepcionista',
+            confirmButtonColor: '#c49b3f',
+            background: '#fff'
+        });
+        return false;
+    }
+    
+    Swal.fire({
+        title: '¿Confirmar asignación?',
+        html: `<p>¿Estás seguro de asignar a:<br><strong>${textoSeleccionado}</strong></p>`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#10b981',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Sí, asignar',
+        cancelButtonText: 'Cancelar',
+        background: '#fff',
+        backdrop: `rgba(0,0,0,0.6)`
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('form-asignar-recepcionista').submit();
+        }
+    });
+}
+
+// Mostrar mensajes de Django con SweetAlert
+{% if messages %}
+    {% for message in messages %}
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: '{{ message.tags }}' === 'error' ? 'error' : 'success',
+                title: '{{ message.tags }}' === 'error' ? 'Error' : 'Éxito',
+                text: '{{ message|escapejs }}',
+                confirmButtonColor: '#c49b3f',
+                timer: 3000,
+                timerProgressBar: true,
+                background: '#fff'
+            });
+        });
+    {% endfor %}
+{% endif %}
+</script>
 
 <style>
     /* Fondo hotell12 */
@@ -277,7 +346,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        color: #1e293b;  /* Texto en negro visible */
+        color: #1e293b;
         font-weight: 500;
     }
 
@@ -288,7 +357,7 @@
     }
 
     .hotel-info-row span {
-        color: #1e293b;  /* Texto en negro */
+        color: #1e293b;
         font-size: 1rem;
     }
 
@@ -382,7 +451,7 @@
     .recepcionista-nombre {
         font-size: 1.8rem;
         font-weight: 700;
-        color: #1e293b;  /* Texto en negro */
+        color: #1e293b;
         margin: 0 0 10px;
     }
 
@@ -413,7 +482,7 @@
         align-items: center;
         padding: 12px 0;
         border-bottom: 1px solid rgba(203, 213, 225, 0.5);
-        color: #1e293b;  /* Texto en negro */
+        color: #1e293b;
     }
 
     .info-list-item:last-child {
@@ -436,7 +505,7 @@
 
     .info-value {
         flex: 1;
-        color: #1e293b;  /* Texto en negro */
+        color: #1e293b;
         font-weight: 500;
     }
 
@@ -525,7 +594,7 @@
     .form-label {
         display: block;
         font-weight: 600;
-        color: #1e293b;  /* Texto en negro */
+        color: #1e293b;
         margin-bottom: 10px;
         font-size: 0.95rem;
     }
@@ -541,7 +610,7 @@
         border: 2px solid #e2e8f0;
         border-radius: 16px;
         font-size: 0.95rem;
-        color: #1e293b;  /* Texto en negro */
+        color: #1e293b;
         background: white;
         cursor: pointer;
         transition: all 0.3s;
@@ -554,7 +623,7 @@
     }
 
     .form-select option {
-        color: #1e293b;  /* Texto en negro */
+        color: #1e293b;
     }
 
     /* Divisor */
@@ -607,7 +676,7 @@
     }
 
     .empty-state h5 {
-        color: #1e293b;  /* Texto en negro */
+        color: #1e293b;
         font-weight: 600;
         font-size: 1.2rem;
         margin-bottom: 10px;
@@ -617,58 +686,7 @@
         color: #64748b !important;
     }
 
-    /* Alertas */
-    .custom-alert {
-        padding: 16px 20px;
-        border-radius: 16px;
-        margin-bottom: 25px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-weight: 500;
-        position: relative;
-        animation: slideIn 0.3s;
-    }
-
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .alert-success {
-        background: rgba(16, 185, 129, 0.1);
-        border-left: 5px solid #10b981;
-        color: #065f46;
-    }
-
-    .alert-error {
-        background: rgba(239, 68, 68, 0.1);
-        border-left: 5px solid #ef4444;
-        color: #b91c1c;
-    }
-
-    .alert-close {
-        margin-left: auto;
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: inherit;
-        opacity: 0.7;
-        transition: 0.3s;
-    }
-
-    .alert-close:hover {
-        opacity: 1;
-    }
-
-    /* Responsive */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
         .page-title {
             font-size: 2rem;
