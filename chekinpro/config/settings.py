@@ -79,15 +79,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database MySQL
+# Database PostgreSQL
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DB_NAME', default='CheKinPro'),
-        'USER': config('DB_USER', default='root'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME', default='chekinpro'),
+        'USER': config('DB_USER', default='postgres'),
         'PASSWORD': config('DB_PASSWORD', default=''),
         'HOST': config('DB_HOST', default='127.0.0.1'),
-        'PORT': config('DB_PORT', default='3306'),
+        'PORT': config('DB_PORT', default='5432'),
     }
 }
 
