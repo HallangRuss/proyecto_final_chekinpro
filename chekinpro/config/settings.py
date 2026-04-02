@@ -4,6 +4,7 @@ Django settings for config project.
 
 from pathlib import Path
 import os
+import dj_database_url
 from decouple import config
 
 # Build paths
@@ -86,14 +87,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database PostgreSQL
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='chekinpro'),
-        'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default=''),
-        'HOST': config('DB_HOST', default='127.0.0.1'),
-        'PORT': config('DB_PORT', default='5432'),
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL', default='sqlite:///db.sqlite3')
+    )
 }
 
 # Password validation
