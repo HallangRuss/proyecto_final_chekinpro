@@ -4,428 +4,307 @@
 {% block content %}
 <div class="auth-wrapper">
     <div class="auth-card">
+
         <div class="auth-header">
-            <h2><i class="bi bi-person-plus"></i> Crear Cuenta</h2>
-            <p class="subtitle">Regístrate para comenzar</p>
+            <h2>Crear cuenta</h2>
+            <p class="subtitle">Regístrate para comenzar a usar el sistema</p>
         </div>
 
-        <!-- Mensajes flotantes -->
+        <!-- MENSAJES -->
         {% if messages %}
         <div class="messages-container">
             {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} auto-hide">
-                <i class="bi {% if message.tags == 'success' %}bi-check-circle{% else %}bi-exclamation-triangle{% endif %}"></i>
+            <div class="alert alert-{{ message.tags }}">
                 {{ message }}
             </div>
             {% endfor %}
         </div>
         {% endif %}
 
+        <!-- INFO -->
         <div class="info-box">
-            <i class="bi bi-info-circle-fill"></i>
-            <div>
-                <strong>📌 Importante:</strong>
-                <ul class="mb-0 mt-2">
-                    <li>Si te registras como <strong>administrador</strong>, podrás crear hoteles</li>
-                    <li>Los <strong>recepcionistas</strong> son creados por el administrador desde el panel</li>
-                    <li>Revisa tu correo después del registro</li>
-                </ul>
-            </div>
+            <strong>Información importante</strong>
+            <ul>
+                <li>Los administradores pueden crear y gestionar hoteles</li>
+                <li>Los recepcionistas son asignados por el administrador</li>
+                <li>Verifica tu correo electrónico después del registro</li>
+            </ul>
         </div>
 
         <form method="POST" novalidate>
             {% csrf_token %}
             
             <div class="form-group">
-                <label><i class="bi bi-person"></i> Nombre de usuario *</label>
+                <label>Nombre de usuario</label>
                 <input type="text" 
                        name="username" 
                        class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
-                       placeholder="Ej: juanperez" 
                        value="{{ form.username.value|default:'' }}"
                        required>
+
                 {% if form.username.errors %}
-                <div class="error-message">
-                    <i class="bi bi-exclamation-triangle"></i> {{ form.username.errors.0 }}
-                </div>
+                <div class="error-message">{{ form.username.errors.0 }}</div>
                 {% endif %}
-                <small>Mínimo 4 caracteres. Solo letras, números y @/./+/-/_</small>
+
+                <small>Mínimo 4 caracteres. Solo letras, números y símbolos permitidos.</small>
             </div>
 
             <div class="form-group">
-                <label><i class="bi bi-envelope"></i> Correo electrónico *</label>
+                <label>Correo electrónico</label>
                 <input type="email" 
                        name="email" 
                        class="form-control {% if form.email.errors %}is-invalid{% endif %}" 
-                       placeholder="ejemplo@correo.com" 
                        value="{{ form.email.value|default:'' }}"
                        required>
+
                 {% if form.email.errors %}
-                <div class="error-message">
-                    <i class="bi bi-exclamation-triangle"></i> {{ form.email.errors.0 }}
-                </div>
+                <div class="error-message">{{ form.email.errors.0 }}</div>
                 {% endif %}
-                <small>Se usará para notificaciones y recuperación de contraseña</small>
+
+                <small>Se utilizará para notificaciones y recuperación de acceso.</small>
             </div>
 
             <div class="form-row">
                 <div class="form-group half">
-                    <label><i class="bi bi-lock"></i> Contraseña *</label>
+                    <label>Contraseña</label>
                     <input type="password" 
                            name="password1" 
                            class="form-control {% if form.password1.errors %}is-invalid{% endif %}" 
-                           placeholder="Mínimo 8 caracteres" 
                            required>
                 </div>
+
                 <div class="form-group half">
-                    <label><i class="bi bi-lock-fill"></i> Confirmar *</label>
+                    <label>Confirmar contraseña</label>
                     <input type="password" 
                            name="password2" 
                            class="form-control {% if form.password2.errors %}is-invalid{% endif %}" 
-                           placeholder="Repite la contraseña" 
                            required>
                 </div>
             </div>
 
             {% if form.password2.errors %}
-            <div class="error-message">
-                <i class="bi bi-exclamation-triangle"></i> {{ form.password2.errors.0 }}
-            </div>
+            <div class="error-message">{{ form.password2.errors.0 }}</div>
             {% endif %}
+
+            <!-- REGLAS CONTRASEÑA -->
+            <div class="password-rules">
+                <p>La contraseña debe cumplir con:</p>
+                <ul>
+                    <li>Mínimo 8 caracteres</li>
+                    <li>Al menos una letra mayúscula</li>
+                    <li>Al menos un número</li>
+                    <li>Un carácter especial</li>
+                </ul>
+            </div>
 
             <div class="checkbox-group">
                 <input type="checkbox" name="is_admin" id="is_admin">
-                <label for="is_admin">
-                    <i class="bi bi-person-badge"></i> Registrarme como <strong>administrador</strong>
-                </label>
+                <label for="is_admin">Registrarme como administrador</label>
             </div>
 
-            <div class="form-footer">
-                <small class="form-text">* Campos obligatorios. La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.</small>
-                <button type="submit" class="btn-primary">
-                    <i class="bi bi-check-circle"></i> Registrarse
-                </button>
-            </div>
+            <button type="submit" class="btn-primary">
+                Crear cuenta
+            </button>
         </form>
 
         <div class="auth-footer">
-            <p>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></p>
+            <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Iniciar sesión</a></p>
         </div>
+
     </div>
 </div>
 
 <style>
-    .auth-wrapper {
-        min-height: calc(100vh - 160px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 40px 20px;
-        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{% static "img/hotel2.jpg" %}') center/cover fixed;
-    }
+.auth-wrapper {
+    min-height: calc(100vh - 160px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{% static "img/hotel2.jpg" %}') center/cover fixed;
+}
 
-    .auth-card {
-        max-width: 550px;
-        width: 100%;
-        background: rgba(255,255,255,0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 30px;
-        padding: 40px;
-        box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-        border: 1px solid rgba(255,255,255,0.2);
-    }
+/* TARJETA */
+.auth-card {
+    max-width: 520px;
+    width: 100%;
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
 
-    .auth-header {
-        text-align: center;
-        margin-bottom: 30px;
-    }
+/* HEADER */
+.auth-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
 
-    h2 {
-        color: #1f2937;
-        font-size: 32px;
-        font-weight: 700;
-        margin-bottom: 10px;
-    }
+.auth-header h2 {
+    font-size: 28px;
+    color: #1f2937;
+    margin-bottom: 5px;
+}
 
-    h2 i {
-        color: #c49b3f;
-        margin-right: 10px;
-    }
+.subtitle {
+    color: #6b7280;
+    font-size: 14px;
+}
 
-    .subtitle {
-        color: #6b7280;
-        font-size: 15px;
-    }
+/* MENSAJES */
+.messages-container {
+    margin-bottom: 15px;
+}
 
-    /* Mensajes flotantes */
-    .messages-container {
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        z-index: 9999;
-        max-width: 350px;
-    }
+.alert {
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
 
-    .alert {
-        padding: 15px 20px;
-        border-radius: 12px;
-        margin-bottom: 10px;
-        color: white;
-        font-weight: 500;
-        animation: slideIn 0.3s ease;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        backdrop-filter: blur(5px);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        border-left: 4px solid;
-    }
+.alert-success {
+    background: #e6f9f0;
+    color: #047857;
+    border: 1px solid #10b981;
+}
 
-    .alert-success {
-        background: #10b981;
-        border-left-color: #059669;
-    }
+.alert-error {
+    background: #fde8e8;
+    color: #b91c1c;
+    border: 1px solid #ef4444;
+}
 
-    .alert-error {
-        background: #ef4444;
-        border-left-color: #dc2626;
-    }
+/* INFO */
+.info-box {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
 
-    .alert i {
-        font-size: 20px;
-    }
+.info-box ul {
+    margin: 10px 0 0;
+    padding-left: 18px;
+}
 
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
+/* FORM */
+.form-group {
+    margin-bottom: 18px;
+}
 
-    .auto-hide {
-        transition: opacity 0.5s ease;
-    }
+.form-row {
+    display: flex;
+    gap: 12px;
+}
 
-    /* Info box */
-    .info-box {
-        background: #2563eb10;
-        border: 1px solid #2563eb30;
-        border-left: 4px solid #2563eb;
-        border-radius: 16px;
-        padding: 20px;
-        margin: 25px 0;
-        display: flex;
-        gap: 15px;
-        font-size: 14px;
-    }
+.form-group.half {
+    width: 50%;
+}
 
-    .info-box i {
-        font-size: 24px;
-        color: #2563eb;
-        flex-shrink: 0;
-    }
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #374151;
+}
 
-    .info-box ul {
-        padding-left: 20px;
-        margin: 8px 0 0;
-        color: #4b5563;
-    }
+.form-control {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+}
 
-    .info-box li {
-        margin-bottom: 4px;
-    }
+.form-control:focus {
+    border-color: #c49b3f;
+    outline: none;
+}
 
-    /* Formulario */
+.is-invalid {
+    border-color: #ef4444;
+}
+
+/* ERRORES */
+.error-message {
+    color: #b91c1c;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* PASSWORD RULES */
+.password-rules {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.password-rules ul {
+    margin: 5px 0 0;
+    padding-left: 18px;
+}
+
+/* CHECKBOX */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.checkbox-group input {
+    accent-color: #c49b3f;
+}
+
+/* BOTÓN */
+.btn-primary {
+    width: 100%;
+    background: #c49b3f;
+    color: #0a141e;
+    border: none;
+    padding: 14px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background: #e6c36a;
+}
+
+/* FOOTER */
+.auth-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-footer a {
+    color: #c49b3f;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
     .form-row {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 5px;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-        width: 100%;
+        flex-direction: column;
     }
 
     .form-group.half {
-        width: 50%;
-    }
-
-    label {
-        display: block;
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 8px;
-        font-size: 14px;
-    }
-
-    label i {
-        color: #c49b3f;
-        margin-right: 5px;
-    }
-
-    .form-control {
         width: 100%;
-        padding: 12px 16px;
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        font-size: 15px;
-        transition: all 0.3s;
-        background: white;
-        box-sizing: border-box;
     }
-
-    .form-control:focus {
-        border-color: #c49b3f;
-        outline: none;
-        box-shadow: 0 0 0 4px rgba(196,155,63,0.1);
-    }
-
-    .form-control.is-invalid {
-        border-color: #ef4444;
-    }
-
-    .error-message {
-        color: #ef4444;
-        font-size: 13px;
-        margin-top: 5px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        background: #fee2e2;
-        padding: 8px 12px;
-        border-radius: 8px;
-        border-left: 4px solid #ef4444;
-    }
-
-    .error-message i {
-        font-size: 16px;
-    }
-
-    small {
-        display: block;
-        color: #6b7280;
-        font-size: 12px;
-        margin-top: 5px;
-    }
-
-    .checkbox-group {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin: 25px 0;
-        padding: 15px;
-        background: #f9fafb;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
-    }
-
-    .checkbox-group input[type="checkbox"] {
-        width: 20px;
-        height: 20px;
-        accent-color: #c49b3f;
-    }
-
-    .checkbox-group label {
-        margin: 0;
-        cursor: pointer;
-        font-weight: 500;
-    }
-
-    .checkbox-group i {
-        color: #c49b3f;
-    }
-
-    .form-footer {
-        margin-top: 30px;
-    }
-
-    .form-text {
-        display: block;
-        color: #6b7280;
-        font-size: 12px;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-
-    .btn-primary {
-        width: 100%;
-        background: linear-gradient(135deg, #2563eb, #1d4ed8);
-        color: white;
-        border: none;
-        padding: 16px;
-        border-radius: 50px;
-        font-weight: 700;
-        font-size: 16px;
-        cursor: pointer;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        box-shadow: 0 8px 20px rgba(37,99,235,0.3);
-    }
-
-    .btn-primary:hover {
-        background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
-        transform: translateY(-2px);
-        box-shadow: 0 12px 25px rgba(37,99,235,0.4);
-    }
-
-    .auth-footer {
-        text-align: center;
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 2px solid #e5e7eb;
-    }
-
-    .auth-footer p {
-        color: #6b7280;
-        margin: 0;
-    }
-
-    .auth-footer a {
-        color: #2563eb;
-        text-decoration: none;
-        font-weight: 600;
-        transition: 0.3s;
-    }
-
-    .auth-footer a:hover {
-        color: #c49b3f;
-        text-decoration: underline;
-    }
-
-    @media (max-width: 600px) {
-        .auth-card {
-            padding: 30px 20px;
-        }
-        .form-row {
-            flex-direction: column;
-        }
-        .form-group.half {
-            width: 100%;
-        }
-        .messages-container {
-            max-width: 300px;
-        }
-    }
+}
 </style>
 
-<script>
-    // Auto-hide mensajes después de 5 segundos
-    setTimeout(function() {
-        document.querySelectorAll('.auto-hide').forEach(function(element) {
-            element.style.transition = 'opacity 0.5s ease';
-            element.style.opacity = '0';
-            setTimeout(function() {
-                element.remove();
-            }, 500);
-        });
-    }, 5000);
-</script>
 {% endblock %}

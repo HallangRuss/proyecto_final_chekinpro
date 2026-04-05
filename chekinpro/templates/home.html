@@ -9,167 +9,176 @@
         <p class="mb-5">Administra tus hoteles, habitaciones, reservas y personal de manera eficiente</p>
         
         <div class="home-buttons">
-            <a href="{% url 'login' %}" class="btn-home btn-login">Iniciar Sesión</a>
-            <a href="{% url 'registro' %}" class="btn-home btn-registro">Registrarse</a>
+            <a href="{% url 'login' %}" class="btn-home btn-gold">
+                🔐 Iniciar Sesión
+            </a>
+            
+            <a href="{% url 'registro' %}" class="btn-home btn-gold-outline">
+                📝 Registrarse
+            </a>
+            
+            <a href="https://youtu.be/idBbQGhZY_Y" target="_blank" class="btn-home btn-youtube">
+                ▶ Tutorial ChekinPro
+            </a>
+            
+            <a href="{% url 'saber_mas' %}" class="btn-home btn-glass">
+                ℹ Saber más de ChekinPro
+            </a>
         </div>
     </div>
 </div>
 
 <style>
-    .home-bg {
-        min-height: calc(100vh - 80px);
-        background: linear-gradient(135deg, rgba(10, 20, 30, 0.9) 0%, rgba(10, 20, 30, 0.7) 100%), 
-                    url('{% static "img/fondohome.jpg" %}') center/cover fixed;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        color: white;
+/* FONDO (NO SE TOCA COMO PEDISTE) */
+.home-bg {
+    min-height: calc(100vh - 80px);
+    background: linear-gradient(135deg, rgba(10, 20, 30, 0.9) 0%, rgba(10, 20, 30, 0.7) 100%), 
+                url('{% static "img/fondohome.jpg" %}') center/cover fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.home-container {
+    max-width: 900px;
+    padding: 40px 20px;
+    animation: fadeInUp 1s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
     }
-    
-    .home-container {
-        max-width: 900px;
-        padding: 40px 20px;
-        animation: fadeInUp 1s ease;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    h1 {
-        font-size: 64px;
-        font-weight: 800;
-        margin-bottom: 20px;
-        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        letter-spacing: -1px;
-    }
-    
-    .pro {
-        color: #c49b3f;
-        position: relative;
-        display: inline-block;
-    }
-    
-    .lead {
-        font-size: 28px;
-        font-weight: 300;
-        margin-bottom: 20px;
-        color: rgba(255, 255, 255, 0.9);
-    }
-    
-    .home-container p:not(.lead) {
-        font-size: 18px;
-        color: rgba(255, 255, 255, 0.7);
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-        line-height: 1.6;
-    }
-    
+}
+
+/* TITULOS */
+h1 {
+    font-size: 64px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.pro {
+    color: #c49b3f;
+}
+
+.lead {
+    font-size: 28px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.home-container p:not(.lead) {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* ================= BOTONES PRO ================= */
+.home-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 50px;
+    flex-wrap: wrap;
+}
+
+.btn-home {
+    position: relative;
+    padding: 14px 34px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    min-width: 200px;
+    transition: 0.35s;
+    overflow: hidden;
+}
+
+/* EFECTO BRILLO */
+.btn-home::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: 0.6s;
+}
+
+.btn-home:hover::before {
+    left: 120%;
+}
+
+/* DORADO */
+.btn-gold {
+    background: linear-gradient(135deg, #c49b3f, #e6c36a);
+    color: #0a141e;
+}
+
+.btn-gold:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(196,155,63,0.7);
+}
+
+/* DORADO SECUNDARIO */
+.btn-gold-outline {
+    border: 2px solid #c49b3f;
+    color: #e6c36a;
+}
+
+.btn-gold-outline:hover {
+    background: linear-gradient(135deg, #c49b3f, #e6c36a);
+    color: #0a141e;
+    transform: translateY(-4px) scale(1.05);
+}
+
+/* YOUTUBE */
+.btn-youtube {
+    border: 2px solid #ff0000;
+    color: white;
+}
+
+.btn-youtube:hover {
+    background: #ff0000;
+    transform: translateY(-4px) scale(1.05);
+}
+
+/* SABER MÁS */
+.btn-glass {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    backdrop-filter: blur(10px);
+}
+
+.btn-glass:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-4px) scale(1.05);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    h1 { font-size: 48px; }
+    .lead { font-size: 22px; }
+
     .home-buttons {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-        margin-top: 50px;
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
     }
-    
+
     .btn-home {
-        display: inline-block;
-        padding: 12px 30px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-        min-width: 150px;
+        width: 100%;
+        max-width: 280px;
     }
-    
-    .btn-login {
-        background: #c49b3f;
-        color: #0a141e;
-        border: 2px solid #c49b3f;
-    }
-    
-    .btn-login:hover {
-        background: #e4b95b;
-        border-color: #e4b95b;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(196, 155, 63, 0.4);
-    }
-    
-    .btn-registro {
-        background: transparent;
-        border: 2px solid #2563eb;
-        color: white;
-    }
-    
-    .btn-registro:hover {
-        background: #2563eb;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
-    }
-    
-    .btn-saber-mas {
-        background: transparent;
-        border: 2px solid white;
-        color: white;
-    }
-    
-    .btn-saber-mas:hover {
-        background: white;
-        color: #0a141e;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
-    }
-    
-    @media (max-width: 768px) {
-        h1 {
-            font-size: 48px;
-        }
-        
-        .lead {
-            font-size: 22px;
-        }
-        
-        .home-container p:not(.lead) {
-            font-size: 16px;
-        }
-        
-        .home-buttons {
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .btn-home {
-            width: 100%;
-            max-width: 250px;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        h1 {
-            font-size: 40px;
-        }
-        
-        .lead {
-            font-size: 18px;
-        }
-        
-        .btn-home {
-            padding: 10px 24px;
-            font-size: 15px;
-        }
-    }
+}
 </style>
 {% endblock %}
